@@ -20,6 +20,9 @@ class ApiAuthorization:
         pass
 
     def get_refreshed_token(self) -> str:
+        """
+        Refreshes authorization token.
+        """
         url = "https://accounts.spotify.com/api/token"
         headers = {
             "Authorization": f"Basic {credentials.BASE64}",

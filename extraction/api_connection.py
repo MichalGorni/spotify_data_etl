@@ -3,6 +3,7 @@ Module provides connection to the Spotify API.
 """
 import requests
 from api_authorization import ApiAuthorization
+from datetime import date
 
 
 class DataExtractor:
@@ -19,6 +20,7 @@ class DataExtractor:
             "Content-Type": "application/json",
             "Authorization": rf"Bearer {self.token}",
         }
+        self.current_date = date.today().strftime("%d-%m-%Y")
 
     def get_playlist_items(self, playlist_id: str) -> dict:
         """
@@ -29,7 +31,20 @@ class DataExtractor:
         playlist_id: str
             ID of a Spotify playlist
         """
-        pass
+        url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+        response = requests.get(url=url, headers=self.headers)
+        data: dict = response.json()
+        # data["playlist_id"] = playlist_id
+        playlist_details: list[dict] = []
+        for index, item in enumerate(data["items"], start=1):
+            track = {
+                "playlist_id": playlist_id,
+                "song_id": item["track"]["id"],
+                "order": index,
+                "date_fetched": self.current_date,
+            }
+            playlist_details.append(track)
+        return playlist_details
 
     def get_audio_features(self, track_id: str) -> dict:
         """
@@ -104,5 +119,5 @@ class DataExtractor:
 
 if __name__ == "__main__":
     ex = DataExtractor()
-    pop = ex.get_track_popularity(track_id="5kXco3VQGGmTwHpKILv1om")
-    print(pop)
+    det = ex.get_playlist_items(playlist_id="7FnUehB3I66c3rK36y7J74")
+    print(det)

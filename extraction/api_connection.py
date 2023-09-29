@@ -22,7 +22,7 @@ class DataExtractor:
         }
         self.current_date = date.today().strftime("%d-%m-%Y")
 
-    def get_playlist_items(self, playlist_id: str) -> dict:
+    def get_playlist_items(self, playlist_id: str) -> list[dict]:
         """
         Gets items of an playlist.
 
@@ -30,20 +30,59 @@ class DataExtractor:
         ----------
         playlist_id: str
             ID of a Spotify playlist
+
+        Returns
+        -------
+        playlist_items: list containing dictionary/es
+            Dictionary with playlist items.
+            dict = {
+                playlist_id: int,
+                song_id: int,
+                order: int,
+                playlist_number_of_songs: int
+                date_fetched: str
+            }
         """
-        url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+        limit = 50
+        url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks?limit={limit}"
         response = requests.get(url=url, headers=self.headers)
         data: dict = response.json()
         # data["playlist_id"] = playlist_id
-        playlist_details: list[dict] = []
+        total: int = data["total"]
+        playlist_items: list[dict] = []
         for index, item in enumerate(data["items"], start=1):
             track = {
                 "playlist_id": playlist_id,
                 "song_id": item["track"]["id"],
                 "order": index,
+                "playlist_number_of_songs": total,
                 "date_fetched": self.current_date,
             }
-            playlist_details.append(track)
+            playlist_items.append(track)
+        return playlist_items
+
+    def get_playlist_details(self, playlist_id: str) -> dict:
+        """
+        Gets details of given id playlist.
+
+        Parameters
+        ----------
+        playlist_id: str
+            ID of playlist to be searched.
+
+        Returns
+        -------
+        playlist_details: dict
+            Dictionary containing playlist details
+
+        """
+        url = f"https://api.spotify.com/v1/playlists/{playlist_id}"
+        response = requests.get(url=url, headers=self.headers)
+        data: dict = response.json()
+        playlist_details = {
+            "playlist_id": playlist_id,
+            "name": data["name"],
+        }
         return playlist_details
 
     def get_audio_features(self, track_id: str) -> dict:

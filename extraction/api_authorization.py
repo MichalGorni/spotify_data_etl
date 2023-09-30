@@ -7,7 +7,7 @@ Only token refreshment needed.
 import requests
 
 # importing secret credentials needed for Spotify API authorization
-import credentials
+from extraction import credentials
 
 
 class ApiAuthorization:

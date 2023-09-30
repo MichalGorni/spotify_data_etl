@@ -37,16 +37,28 @@ def run_etl_for_playlist(playlist_id: str) -> None:
     audio_details = extractor.get_several_track_audio_features(ids)
     df_track_audio_details = transformer.transform_track_audio_details(audio_details)
 
-    # loading dataframes into database
-    data_connection = {
-        df_playlist_tracks: "playlist_tracks",
-        df_playlist_details: "playlist_details",
-        df_track_details: "track_details",
-        df_track_artist_bridge: "track_artist_bridge",
-        df_track_audio_details: "track_audio_features",
-    }
-    for df, table_name in data_connection.items():
+    # Loading data into database
+    dataframes = [
+        df_playlist_tracks,
+        df_playlist_details,
+        df_track_details,
+        df_track_artist_bridge,
+        df_track_audio_details,
+    ]
+    tables = [
+        "playlist_tracks",
+        "playlist_details",
+        "track_details",
+        "track_artist_bridge",
+        "track_audio_features",
+    ]
+    for df, table_name in zip(dataframes, tables):
         print(f"Loading data into {table_name} table")
         db_connection.load_table_to_database(df=df, table_name=table_name)
     stop = time.perf_counter()
     print(f"Done\nProcess took {round((stop-start),2)} seconds")
+
+
+if __name__ == "__main__":
+    playlist_id = "37i9dQZF1DWUKw1j740sGk"
+    run_etl_for_playlist(playlist_id=playlist_id)

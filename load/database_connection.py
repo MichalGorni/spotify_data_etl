@@ -25,4 +25,4 @@ class DataBaseConnector:
         table_name: str
             Name of table to load data.
         """
-        df.to_sql(table_name, self.connection, index=False, if_exists="replace")
+        df.to_sql(table_name, self.connection, index=False, if_exists="append")

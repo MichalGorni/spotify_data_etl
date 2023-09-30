@@ -2,7 +2,7 @@
 Module provides connection to the Spotify API.
 """
 import requests
-from api_authorization import ApiAuthorization
+from extraction.api_authorization import ApiAuthorization
 from datetime import date
 
 

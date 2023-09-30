@@ -221,6 +221,5 @@ class DataExtractor:
 if __name__ == "__main__":
     ex = DataExtractor()
     ids = ["7FGcZ3rvyUcqtz4dKpRvb0", "6W9qtw3ddhkYznaOxB50p8", "1qfXkt43hgsBEMqilpidIm"]
-    playlist_tracks = ex.get_playlist_items(playlist_id="7FnUehB3I66c3rK36y7J74")
-    for row in playlist_tracks:
-        print(row)
+    det = ex.get_playlist_details(playlist_id="7FnUehB3I66c3rK36y7J74")
+    print(det)

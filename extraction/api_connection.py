@@ -61,7 +61,7 @@ class DataExtractor:
             playlist_items.append(track)
         return playlist_items
 
-    def get_playlist_details(self, playlist_id: str) -> dict:
+    def get_playlist_details(self, playlist_id: str) -> list:
         """
         Gets details of given id playlist.
 
@@ -72,8 +72,8 @@ class DataExtractor:
 
         Returns
         -------
-        playlist_details: dict
-            Dictionary containing playlist details
+        playlist_details: list
+            List object containing dictionary with playlist details
 
         """
         url = f"https://api.spotify.com/v1/playlists/{playlist_id}"
@@ -83,7 +83,7 @@ class DataExtractor:
             "playlist_id": playlist_id,
             "name": data["name"],
         }
-        return playlist_details
+        return [playlist_details]
 
     def get_audio_features(self, track_id: str) -> dict:
         """

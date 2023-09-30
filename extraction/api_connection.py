@@ -177,7 +177,7 @@ class DataExtractor:
         tracks_data = response.json()["audio_features"]
         return tracks_data
 
-    def get_several_track_details(self, track_ids: dict) -> tuple[list[dict]]:
+    def get_several_track_details(self, track_ids: list) -> tuple[list[dict]]:
         """
         Function fetches details for multiple tracks
 
@@ -205,13 +205,13 @@ class DataExtractor:
             track_data: dict = {}
             track_data["track_id"] = track["id"]
             track_data["name"] = track["name"]
-            track_data["album_id"] = track["album"]["id"]
             track_data["popularity"] = track["popularity"]
-            track_data["main_artist"] = track["artists"][0]["id"]
+            track_data["album_id"] = track["album"]["id"]
+            track_data["main_artist_id"] = track["artists"][0]["id"]
             # creating dictionary representing track - artist connection
             # in case of multiple artist
             for artist in track["artists"]:
-                connection = {track["id"]: artist["id"]}
+                connection = {"track_id": track["id"], "artist_id": artist["id"]}
                 track_artist_bridge.append(connection)
             track_details.append(track_data)
 

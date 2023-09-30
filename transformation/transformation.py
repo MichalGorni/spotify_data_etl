@@ -88,7 +88,27 @@ class Transformers:
         df = df.dropna(how="all")
         return df
 
-    def transform_playlist_details(self, details_data: list[dict]) -> pd.DataFrame:
-        pass
+    def transform_playlist_details(self, data: list[dict]) -> pd.DataFrame:
+        """
+        - Transforms given data into a DataFrame.
+        - Ensures correct data types.
+        - Removes blank rows.
+
+        Parameters
+        ----------
+        data: list
+            List containing dictionaries representing single track data
+
+        Returns
+        -------
+        df: pd.DataFrame
+            DataFrame object with tracks details
+        """
+        data_types = {"playlist_id": str, "name": str, "total_songs": int}
+        df = pd.DataFrame(data)
+        df["total_songs"] = self.total_songs
+        df = df.astype(data_types)
+        df = df.dropna(how="all")
+        return df
 
     # TODO: Finish this function.

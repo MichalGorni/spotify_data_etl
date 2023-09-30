@@ -20,7 +20,7 @@ class DataExtractor:
             "Content-Type": "application/json",
             "Authorization": rf"Bearer {self.token}",
         }
-        self.current_date = date.today().strftime("%d-%m-%Y")
+        self.current_date = date.today().strftime("%Y-%m-%d")
 
     def get_playlist_items(self, playlist_id: str) -> list[dict]:
         """

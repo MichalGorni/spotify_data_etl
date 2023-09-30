@@ -111,4 +111,45 @@ class Transformers:
         df = df.dropna(how="all")
         return df
 
-    # TODO: Finish this function.
+    def transform_track_audio_details(self, data: list[dict]) -> pd.DataFrame:
+        """
+        - Transforms given data into a DataFrame.
+        - Ensures correct data types.
+        - Removes not used columns from DataFrame.
+        - Removes blank rows.
+
+        Parameters
+        ----------
+        data: list
+            List containing dictionaries representing single track data
+
+        Returns
+        -------
+        df: pd.DataFrame
+            DataFrame object with tracks details
+        """
+        data_types = {
+            "danceability": float,
+            "energy": float,
+            "key": int,
+            "loudness": float,
+            "mode": int,
+            "speechiness": float,
+            "acousticness": float,
+            "instrumentalness": float,
+            "liveness": float,
+            "valence": float,
+            "tempo": float,
+            "type": str,  # to be deleted
+            "id": str,
+            "uri": str,  # to be deleted
+            "track_href": str,  # to be deleted
+            "analysis_url": str,  # to be deleted
+            "duration_ms": int,
+            "time_signature": int,
+        }
+        df = pd.DataFrame(data)
+        df = df.astype(data_types)
+        df = df.drop(columns=["type", "uri", "track_href", "analysis_url"])
+        df = df.dropna(how="all")
+        return df

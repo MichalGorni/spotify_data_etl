@@ -2,7 +2,7 @@
 Module provides connection to the Spotify API.
 """
 import requests
-from extraction.api_authorization import ApiAuthorization
+from api_authorization import ApiAuthorization
 from datetime import date
 
 
@@ -127,8 +127,7 @@ class DataExtractor:
             headers=self.headers,
         )
         track_data: dict = response.json()
-        track_data["track_id"] = track_id
-        track_data["popularity"] = self.get_track_popularity()
+        track_data["popularity"] = self.get_track_popularity(track_id=track_id)
         return track_data
 
     def get_track_popularity(self, track_id: str) -> int:
@@ -155,8 +154,76 @@ class DataExtractor:
         popularity: int = data["popularity"]
         return popularity
 
+    def get_several_track_audio_features(self, track_ids: list) -> list[dict]:
+        """
+        Gets audio details for several tracks in one API call.
+
+        Parameters
+        ---------
+        track_ids: list
+            List containing IDs of tracks.
+
+        Returns
+        -------
+        tracks_data: list
+            list containing dictionaries with single track audio features
+        """
+        tracks = ",".join(track_ids)
+        url = rf"https://api.spotify.com/v1/audio-features?ids={tracks}"
+        response = requests.get(
+            url,
+            headers=self.headers,
+        )
+        tracks_data = response.json()["audio_features"]
+        return tracks_data
+
+    def get_several_track_details(self, track_ids: dict) -> tuple[list[dict]]:
+        """
+        Function fetches details for multiple tracks
+
+        Parameters
+        ---------
+        track_ids: list
+            List objects with string items representing IDs of tracks.
+
+        Returns
+        -------
+        tracks_data: list
+            list containing dictionaries, each cotaining a single track details
+        """
+        ids = ",".join(track_ids)
+        url = rf"https://api.spotify.com/v1/tracks?ids={ids}"
+        response = requests.get(
+            url,
+            headers=self.headers,
+        )
+        tracks = response.json()["tracks"]
+        track_artist_bridge: list[dict] = []
+        track_details: list[dict] = []
+        for track in tracks:
+            # creating dictionary containing details of a track
+            track_data: dict = {}
+            track_data["track_id"] = track["id"]
+            track_data["name"] = track["name"]
+            track_data["album_id"] = track["album"]["id"]
+            track_data["popularity"] = track["popularity"]
+            track_data["main_artist"] = track["artists"][0]["id"]
+            # creating dictionary representing track - artist connection
+            # in case of multiple artist
+            for artist in track["artists"]:
+                connection = {track["id"]: artist["id"]}
+                track_artist_bridge.append(connection)
+            track_details.append(track_data)
+
+        return track_details, track_artist_bridge
+
 
 if __name__ == "__main__":
     ex = DataExtractor()
-    det = ex.get_playlist_items(playlist_id="7FnUehB3I66c3rK36y7J74")
-    print(det)
+    ids = ["7FGcZ3rvyUcqtz4dKpRvb0", "6W9qtw3ddhkYznaOxB50p8", "1qfXkt43hgsBEMqilpidIm"]
+    details, bridge = ex.get_several_track_details(ids)
+    for item in details:
+        print(item)
+    print("-----------bridge---------")
+    for item in bridge:
+        print(item)

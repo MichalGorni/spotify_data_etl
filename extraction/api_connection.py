@@ -37,9 +37,9 @@ class DataExtractor:
             Dictionary with playlist items.
             dict = {
                 playlist_id: int,
-                song_id: int,
+                track_id: int,
                 order: int,
-                playlist_number_of_songs: int
+                playlist_number_of_tracks: int
                 date_fetched: str
             }
         """
@@ -53,9 +53,9 @@ class DataExtractor:
         for index, item in enumerate(data["items"], start=1):
             track = {
                 "playlist_id": playlist_id,
-                "song_id": item["track"]["id"],
-                "order": index,
-                "playlist_number_of_songs": total,
+                "track_id": item["track"]["id"],
+                "track_order": index,
+                "playlist_number_of_tracks": total,
                 "date_fetched": self.current_date,
             }
             playlist_items.append(track)
@@ -221,9 +221,6 @@ class DataExtractor:
 if __name__ == "__main__":
     ex = DataExtractor()
     ids = ["7FGcZ3rvyUcqtz4dKpRvb0", "6W9qtw3ddhkYznaOxB50p8", "1qfXkt43hgsBEMqilpidIm"]
-    details, bridge = ex.get_several_track_details(ids)
-    for item in details:
-        print(item)
-    print("-----------bridge---------")
-    for item in bridge:
-        print(item)
+    playlist_tracks = ex.get_playlist_items(playlist_id="7FnUehB3I66c3rK36y7J74")
+    for row in playlist_tracks:
+        print(row)

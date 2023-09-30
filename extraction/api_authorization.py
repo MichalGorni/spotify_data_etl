@@ -12,8 +12,8 @@ import credentials
 
 class ApiAuthorization:
     """
-    Class represents OAuth token.
-    Returns refreshed token as a string.
+    Class refreshes authorization token need for connection to the API.
+    Uses secret client credentials.
     """
 
     def __init__(self) -> None:
@@ -22,6 +22,11 @@ class ApiAuthorization:
     def get_refreshed_token(self) -> str:
         """
         Refreshes authorization token.
+
+        Returns
+        -------
+        token: str
+            string variable representing OAuth token.
         """
         url = "https://accounts.spotify.com/api/token"
         headers = {

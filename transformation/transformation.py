@@ -151,5 +151,6 @@ class Transformers:
         df = pd.DataFrame(data)
         df = df.astype(data_types)
         df = df.drop(columns=["type", "uri", "track_href", "analysis_url"])
+        df.insert(0, "id", df.pop("id"))
         df = df.dropna(how="all")
         return df

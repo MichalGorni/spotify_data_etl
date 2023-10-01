@@ -1,4 +1,4 @@
-# ETL of Spotify data from API
+# ETL of Spotify data from REST API
 
 ## The projest provides a script for extracting data fetched from Spotify REST API and loading into SQL Database.
 
